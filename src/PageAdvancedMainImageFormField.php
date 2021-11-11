@@ -9,14 +9,14 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class PageAdvancedMainImageFormField extends PageMainImageField
 {
-    public function formField(FormMapper $formMapper): FormMapper
+    public function formField(FormMapper $form): FormMapper
     {
-        parent::formField($formMapper);
+        parent::formField($form);
 
-        /** @var PageInterface $page */
-        $page = $this->admin->getSubject();
+        /** @var PageInterface $subject */
+        $subject = $this->admin->getSubject();
 
-        $formMapper->add('mainImageFormat', ChoiceType::class, [
+        $form->add('mainImageFormat', ChoiceType::class, [
             'required' => false,
             'mapped' => false,
             'label' => 'admin.page.mainImageFormat.label',
@@ -27,10 +27,10 @@ class PageAdvancedMainImageFormField extends PageMainImageField
                 'admin.page.mainImageFormat.34fullscreen' => 3,
                 //'admin.page.mainImageFormat.fullscreen' => 4,
             ],
-            'data' => (int) ($page->getCustomProperty('mainImageFormat')),
+            'data' => (int) ($subject->getCustomProperty('mainImageFormat')),
         ]);
 
-        return $formMapper;
+        return $form;
     }
 
     public static function formatToRatio($format): string

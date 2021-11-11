@@ -16,9 +16,9 @@ final class AdminFormEventSuscriber implements EventSubscriberInterface
 {
     private AppPool $apps;
 
-    public function __construct(AppPool $apps)
+    public function __construct(AppPool $appPool)
     {
-        $this->apps = $apps;
+        $this->apps = $appPool;
     }
 
     public static function getSubscribedEvents(): array
@@ -31,32 +31,32 @@ final class AdminFormEventSuscriber implements EventSubscriberInterface
     }
 
     /** @psalm-suppress  NoInterfaceProperties */
-    public function replaceFields(FormEvent $event): void
+    public function replaceFields(FormEvent $formEvent): void
     {
         /** @var PageInterface $page */
-        $page = $event->getAdmin()->getSubject();
+        $page = $formEvent->getAdmin()->getSubject();
 
         if (! $this->apps->get($page->getHost())->get('advanced_main_image')) {
             return;
         }
 
         $formFieldReplacer = new FormFieldReplacer();
-        $fields = $formFieldReplacer->run(PageMainImageField::class, PageAdvancedMainImageFormField::class, $event->getFields());
+        $fields = $formFieldReplacer->run(PageMainImageField::class, PageAdvancedMainImageFormField::class, $formEvent->getFields());
 
-        $event->setFields($fields);
+        $formEvent->setFields($fields);
     }
 
-    public function setAdvancedMainImage(PersistenceEvent $event): void
+    public function setAdvancedMainImage(PersistenceEvent $persistenceEvent): void
     {
-        if (! $event->getAdmin() instanceof PageAdminInterface) {
+        if (! $persistenceEvent->getAdmin() instanceof PageAdminInterface) {
             return;
         }
 
-        $returnValues = $event->getAdmin()->getRequest()->get($event->getAdmin()->getRequest()->get('uniqid'));
+        $returnValues = $persistenceEvent->getAdmin()->getRequest()->get($persistenceEvent->getAdmin()->getRequest()->get('uniqid'));
 
-        /** @var PageInterface $page */
-        $page = $event->getAdmin()->getSubject();
+        /** @var PageInterface $subject */
+        $subject = $persistenceEvent->getAdmin()->getSubject();
 
-        $page->setCustomProperty('mainImageFormat', isset($returnValues['mainImageFormat']) ? (int) ($returnValues['mainImageFormat']) : 0);
+        $subject->setCustomProperty('mainImageFormat', isset($returnValues['mainImageFormat']) ? (int) ($returnValues['mainImageFormat']) : 0);
     }
 }
