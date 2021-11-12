@@ -3,7 +3,6 @@
 namespace Pushword\AdvancedMainImage;
 
 use Pushword\Admin\FormField\PageMainImageField;
-use Pushword\Core\Entity\PageInterface;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
@@ -13,7 +12,6 @@ class PageAdvancedMainImageFormField extends PageMainImageField
     {
         parent::formField($form);
 
-        /** @var PageInterface $subject */
         $subject = $this->admin->getSubject();
 
         $form->add('mainImageFormat', ChoiceType::class, [
