@@ -21,6 +21,9 @@ final class AdminFormEventSuscriber implements EventSubscriberInterface
         $this->apps = $appPool;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public static function getSubscribedEvents(): array
     {
         return [

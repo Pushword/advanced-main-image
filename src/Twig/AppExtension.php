@@ -8,6 +8,9 @@ use Twig\TwigFunction;
 
 class AppExtension extends AbstractExtension
 {
+    /**
+     * @return \Twig\TwigFunction[]
+     */
     public function getFunctions()
     {
         return [
