@@ -14,10 +14,7 @@ class Configuration implements ConfigurationInterface
         'advanced_main_image',
     ];
 
-    /**
-     * @return \Symfony\Component\Config\Definition\Builder\TreeBuilder
-     */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('admin_block_editor');
         $treeBuilder->getRootNode()->children()
