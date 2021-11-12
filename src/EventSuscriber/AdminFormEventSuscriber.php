@@ -12,6 +12,9 @@ use Pushword\Core\Entity\PageInterface;
 use Sonata\AdminBundle\Event\PersistenceEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * @template T of object
+ */
 final class AdminFormEventSuscriber implements EventSubscriberInterface
 {
     private AppPool $apps;
@@ -33,13 +36,17 @@ final class AdminFormEventSuscriber implements EventSubscriberInterface
         ];
     }
 
-    /** @psalm-suppress  NoInterfaceProperties */
+    /**
+     * @psalm-suppress  NoInterfaceProperties
+     *
+     * @param FormEvent<T> $formEvent
+     */
     public function replaceFields(FormEvent $formEvent): void
     {
         /** @var PageInterface $page */
         $page = $formEvent->getAdmin()->getSubject();
 
-        if (! $this->apps->get($page->getHost())->get('advanced_main_image')) {
+        if (false === $this->apps->get($page->getHost())->get('advanced_main_image')) {
             return;
         }
 
@@ -49,6 +56,9 @@ final class AdminFormEventSuscriber implements EventSubscriberInterface
         $formEvent->setFields($fields);
     }
 
+    /**
+     * @param PersistenceEvent<T> $persistenceEvent
+     */
     public function setAdvancedMainImage(PersistenceEvent $persistenceEvent): void
     {
         if (! $persistenceEvent->getAdmin() instanceof PageAdminInterface) {

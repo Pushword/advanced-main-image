@@ -25,13 +25,13 @@ class PageAdvancedMainImageFormField extends PageMainImageField
                 'admin.page.mainImageFormat.34fullscreen' => 3,
                 //'admin.page.mainImageFormat.fullscreen' => 4,
             ],
-            'data' => (int) ($subject->getCustomProperty('mainImageFormat')),
+            'data' => \intval($subject->getCustomProperty('mainImageFormat')),
         ]);
 
         return $form;
     }
 
-    public static function formatToRatio($format): string
+    public static function formatToRatio(int $format): string
     {
         switch ($format) {
             case 2: return 'screen-1/3';
