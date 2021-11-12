@@ -52,11 +52,12 @@ final class AdminFormEventSuscriber implements EventSubscriberInterface
             return;
         }
 
-        $returnValues = $persistenceEvent->getAdmin()->getRequest()->get($persistenceEvent->getAdmin()->getRequest()->get('uniqid'));
+        $returnValues = $persistenceEvent->getAdmin()->getRequest()
+            ->get($persistenceEvent->getAdmin()->getRequest()->get('uniqid')); // @phpstan-ignore-line
 
-        /** @var PageInterface $subject */
-        $subject = $persistenceEvent->getAdmin()->getSubject();
-
-        $subject->setCustomProperty('mainImageFormat', isset($returnValues['mainImageFormat']) ? (int) ($returnValues['mainImageFormat']) : 0);
+        $persistenceEvent->getAdmin()->getSubject()->setCustomProperty(
+            'mainImageFormat',
+            isset($returnValues['mainImageFormat']) ? (int) ($returnValues['mainImageFormat']) : 0 // @phpstan-ignore-line
+        );
     }
 }
