@@ -35,6 +35,7 @@ final class AdminFormEventSuscriber implements EventSubscriberInterface
 
     /**
      * @psalm-suppress  NoInterfaceProperties
+     * @psalm-suppress  InvalidArgument // use only phpstan
      *
      * @param FormEvent<T> $formEvent
      */
@@ -47,8 +48,8 @@ final class AdminFormEventSuscriber implements EventSubscriberInterface
             return;
         }
 
-        $formFieldReplacer = new FormFieldReplacer();
-        $fields = $formFieldReplacer->run(PageMainImageField::class, PageAdvancedMainImageFormField::class, $formEvent->getFields());
+        $fields = $formEvent->getFields();
+        (new FormFieldReplacer())->run(PageMainImageField::class, PageAdvancedMainImageFormField::class, $fields);
 
         $formEvent->setFields($fields);
     }
