@@ -34,7 +34,6 @@ final readonly class AdminFormEventSuscriber implements EventSubscriberInterface
     }
 
     /**
-     * @psalm-suppress  NoInterfaceProperties
      * @psalm-suppress  InvalidArgument // use only phpstan
      *
      * @param FormEvent<T> $formEvent
