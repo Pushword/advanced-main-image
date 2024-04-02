@@ -55,6 +55,8 @@ final readonly class AdminFormEventSuscriber implements EventSubscriberInterface
 
     /**
      * @param PersistenceEvent<T> $persistenceEvent
+     *
+     * @psalm-suppress RedundantCondition
      */
     public function setAdvancedMainImage(PersistenceEvent $persistenceEvent): void
     {
