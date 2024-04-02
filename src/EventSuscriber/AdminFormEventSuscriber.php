@@ -8,7 +8,7 @@ use Pushword\Admin\PageAdmin;
 use Pushword\Admin\Utils\FormFieldReplacer;
 use Pushword\AdvancedMainImage\PageAdvancedMainImageFormField;
 use Pushword\Core\Component\App\AppPool;
-use Pushword\Core\Entity\Page;
+use Pushword\Core\Entity\PageInterface;
 use Sonata\AdminBundle\Event\PersistenceEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -34,13 +34,14 @@ final readonly class AdminFormEventSuscriber implements EventSubscriberInterface
     }
 
     /**
+     * @psalm-suppress  NoInterfaceProperties
      * @psalm-suppress  InvalidArgument // use only phpstan
      *
      * @param FormEvent<T> $formEvent
      */
     public function replaceFields(FormEvent $formEvent): void
     {
-        /** @var Page $page */
+        /** @var PageInterface $page */
         $page = $formEvent->getAdmin()->getSubject();
 
         if (false === $this->apps->get($page->getHost())->get('advanced_main_image')) {
@@ -55,8 +56,6 @@ final readonly class AdminFormEventSuscriber implements EventSubscriberInterface
 
     /**
      * @param PersistenceEvent<T> $persistenceEvent
-     *
-     * @psalm-suppress RedundantCondition
      */
     public function setAdvancedMainImage(PersistenceEvent $persistenceEvent): void
     {
@@ -65,7 +64,7 @@ final readonly class AdminFormEventSuscriber implements EventSubscriberInterface
         }
 
         $returnValues = $persistenceEvent->getAdmin()->getRequest()->request
-            ->all($persistenceEvent->getAdmin()->getRequest()->query->getString('uniqid') ?: null); // @phpstan-ignore-line
+            ->all($persistenceEvent->getAdmin()->getRequest()->query->get('uniqid'));
 
         $persistenceEvent->getAdmin()->getSubject()->setCustomProperty(
             'mainImageFormat',
