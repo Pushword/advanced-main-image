@@ -4,6 +4,8 @@ namespace Pushword\AdvancedMainImage;
 
 use Override;
 use Pushword\Admin\FormField\PageMainImageField;
+use Pushword\AdvancedMainImage\DependencyInjection\Configuration as AdvancedMainImageConfiguration;
+use Pushword\Core\Entity\Page;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Twig\Attribute\AsTwigFunction;
@@ -21,7 +23,7 @@ class PageAdvancedMainImageFormField extends PageMainImageField
             'required' => false,
             'mapped' => false,
             'label' => 'admin.page.mainImageFormat.label',
-            'choices' => MainImageFormatsConfig::getFormatsStatic(),
+            'choices' => $this->resolveMainImageFormats($subject),
             'data' => (int) $subject->getCustomPropertyScalar('mainImageFormat'),
         ]);
     }
@@ -35,5 +37,17 @@ class PageAdvancedMainImageFormField extends PageMainImageField
             4 => 'screen',
             default => '[75vh]',
         };
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    private function resolveMainImageFormats(?Page $page): array
+    {
+        $host = null !== $page ? $page->getHost() : null;
+        $app = $this->formFieldManager->apps->get($host);
+        $formats = $app->getArray('main_image_formats', AdvancedMainImageConfiguration::DEFAULT_MAIN_IMAGE_FORMATS);
+
+        return [] === $formats ? AdvancedMainImageConfiguration::DEFAULT_MAIN_IMAGE_FORMATS : $formats;
     }
 }
